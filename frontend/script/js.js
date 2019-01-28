@@ -41,6 +41,22 @@ xhr.send(JSON.stringify({"target":ttarget,"aktual":0,"varianz":0}));
 
 
 
+function update_db(id,actual,varianz){
+       var xhr = new XMLHttpRequest();
+xhr.open('Post','https://8fj132fssi.execute-api.us-east-2.amazonaws.com/mystage/update');
+xhr.onreadystatechange= function(event){
+  
+  console.log(event.target.response);
+}
+ 
+xhr.setRequestHeader('Content-Type','application/json');
+ 
+xhr.send(JSON.stringify({"id":id,"actual":actual,"varianz":varianz}));
+}
+
+
+
+
 
 
 function remove(){
@@ -58,11 +74,11 @@ function add_ui(id,target,aktual,varianz){
      
     
     var newhtml ; 
-    var html = '<tr onclick="modal(this)" id="child"><td>idd</td><td>target</td><td><input type="text"></td><td>varianz</td><td><input type="submit" value=calculate></td</tr>'
+    var html = '<tr onclick="modal(this)" id="child"><td>idd</td><td>target</td><td>aktual</td><td>varianz</td></tr>'
   //  var html =  '<tr onclick="modal(this)" id="child"><td>idd</td><td>target</td><td>aktual</td><td>varianz</td></tr>';
     newhtml = html.replace("idd",id);
     newhtml = newhtml.replace("target",target);
-   // newhtml = newhtml.replace("aktual",aktual);
+   newhtml = newhtml.replace("aktual",aktual);
     newhtml = newhtml.replace("varianz",varianz);
  document.querySelector('table').insertAdjacentHTML('beforeend',newhtml);
       console.log('hii');
@@ -77,12 +93,29 @@ function btn_function (){
     
 }
 function modal(x){
+    var variance ; 
     var indice = x.rowIndex ; 
   var table= document.getElementById("parent"); 
 var id = table.rows[indice].cells[0].innerHTML ; 
-var aktual= table.rows[indice].cells[1].innerHTML ; 
- var target= table.rows[indice].cells[2].innerHTML ; 
- table.rows[indice].cells[3].innerHTML= target-aktual ; 
+var aktual= table.rows[indice].cells[2].innerHTML ; 
+ var target= table.rows[indice].cells[1].innerHTML ; 
+  
+    
+    var aktual = prompt("enter the variance","variance") ; 
+    if(aktual!=null){
+      variance = aktual-target ; 
+    }
+    if(variance > 0) {
+          table.rows[indice].cells[3].innerHTML= variance;
+           table.rows[indice].cells[3].style.color="blue";
+         table.rows[indice].cells[2].innerHTML= aktual;
+    }
+    else{
+         table.rows[indice].cells[3].innerHTML= variance;
+           table.rows[indice].cells[3].style.color="red";
+          table.rows[indice].cells[2].innerHTML= aktual;
+    }
+    update_db(id,aktual,variance);
 }
 function calling_data() {
   

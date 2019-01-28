@@ -7,6 +7,9 @@
 html{
     font-size: 10px ; 
 }
+tr:hover{
+    cursor: pointer;
+}
 .label{
     background-color: white; 
     width: 5rem;
